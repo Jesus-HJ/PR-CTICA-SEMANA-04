@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="GameZone - Portal de videojuegos con animaciones interactivas, Canvas API y manipulación dinámica del DOM."
+    >
+
+    <title>GameZone | Videojuegos</title>
+
+    <link rel="stylesheet" href="Style.css">
+
+    <script src="App.js" defer></script>
+</head>
+
+<body>
+
+    <!-- =====================================================
+         NAVBAR
+    ====================================================== -->
+
+    <header class="navbar">
+
+        <div class="logo">
+            <span>GAME</span><strong>ZONE</strong>
+        </div>
+
+        <nav>
+            <a href="#inicio">Inicio</a>
+            <a href="#juegos">Juegos</a>
+            <a href="#destacados">Destacados</a>
+            <a href="#comunidad">Comunidad</a>
+        </nav>
+
+        <button id="arcadeBtn" class="btn btn-purple">
+            🎮 Modo Arcade
+        </button>
+
+    </header>
+
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <main>
+
+        <section id="inicio" class="hero">
+
+            <!-- CANVAS -->
+            <canvas id="gameCanvas"></canvas>
+
+            <div class="hero-content">
+
+                <span class="badge">
+                    ⚡ NUEVA TEMPORADA
+                </span>
+
+                <h1>
+                    EL MUNDO DE LOS
+                    <span>VIDEOJUEGOS</span>
+                </h1>
+
+                <p>
+                    Descubre nuevos mundos, supera desafíos
+                    y vive experiencias increíbles.
+                </p>
+
+                <div class="hero-buttons">
+
+                    <button id="exploreBtn" class="btn btn-primary">
+                        Explorar juegos
+                    </button>
+
+                    <button id="pauseCanvasBtn" class="btn btn-secondary">
+                        ⏸ Pausar efectos
+                    </button>
+
+                </div>
+
+                <div class="hero-stats">
+
+                    <div>
+                        <strong id="playersCount">12,580</strong>
+                        <span>Jugadores</span>
+                    </div>
+
+                    <div>
+                        <strong>245</strong>
+                        <span>Juegos</span>
+                    </div>
+
+                    <div>
+                        <strong>89</strong>
+                        <span>Eventos</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             CATEGORÍAS
+        ====================================================== -->
+
+        <section class="categories">
+
+            <div class="section-title">
+
+                <span>EXPLORA</span>
+
+                <h2>
+                    ENCUENTRA TU
+                    <strong>JUEGO</strong>
+                </h2>
+
+                <p>
+                    Filtra los videojuegos dinámicamente.
+                </p>
+
+            </div>
+
+
+            <div class="filters">
+
+                <button
+                    class="filter active"
+                    data-category="todos">
+                    Todos
+                </button>
+
+                <button
+                    class="filter"
+                    data-category="accion">
+                    Acción
+                </button>
+
+                <button
+                    class="filter"
+                    data-category="aventura">
+                    Aventura
+                </button>
+
+                <button
+                    class="filter"
+                    data-category="carreras">
+                    Carreras
+                </button>
+
+                <button
+                    class="filter"
+                    data-category="estrategia">
+                    Estrategia
+                </button>
+
+            </div>
+
+
+            <!-- TARJETAS GENERADAS CON DOM -->
+
+            <div id="gamesContainer" class="games-grid"></div>
+
+        </section>
+
+
+        <!-- =====================================================
+             CLOSURE + DOM
+        ====================================================== -->
+
+        <section id="destacados" class="featured">
+
+            <div class="featured-text">
+
+                <span class="badge">
+                    🧠 SISTEMA DE PROGRESO
+                </span>
+
+                <h2>
+                    TU PROGRESO
+                    <span>SE GUARDA</span>
+                </h2>
+
+                <p>
+                    Este contador utiliza un Closure para
+                    mantener el estado entre diferentes
+                    interacciones sin utilizar variables globales.
+                </p>
+
+                <button id="xpBtn" class="btn btn-primary">
+                    ⚡ Ganar XP
+                </button>
+
+            </div>
+
+
+            <div class="xp-card">
+
+                <div class="xp-header">
+
+                    <span>EXPERIENCIA</span>
+
+                    <strong id="xpValue">
+                        0 XP
+                    </strong>
+
+                </div>
+
+                <div class="xp-bar">
+
+                    <div id="xpProgress"></div>
+
+                </div>
+
+                <p id="levelText">
+                    Nivel 1 · Novato
+                </p>
+
+                <small>
+                    Estado conservado mediante Closure
+                </small>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             EVENT LOOP / RENDIMIENTO
+        ====================================================== -->
+
+        <section class="performance">
+
+            <div class="section-title">
+
+
+                <h2>
+                    CENTRO DE
+                    <strong>RENDIMIENTO</strong>
+                </h2>
+
+                <p>
+                    Métricas visibles de la animación Canvas.
+                </p>
+
+            </div>
+
+
+            <div class="performance-grid">
+
+                <div class="metric">
+
+                    <span>FPS</span>
+
+                    <strong id="fpsValue">
+                        0
+                    </strong>
+
+                    <small>
+                        requestAnimationFrame
+                    </small>
+
+                </div>
+
+
+                <div class="metric">
+
+                    <span>PARTÍCULAS</span>
+
+                    <strong id="particleValue">
+                        0
+                    </strong>
+
+                    <small>
+                        Canvas 2D
+                    </small>
+
+                </div>
+
+
+                <div class="metric">
+
+                    <span>FRAMES</span>
+
+                    <strong id="frameValue">
+                        0
+                    </strong>
+
+                    <small>
+                        Renderizados
+                    </small>
+
+                </div>
+
+
+                <div class="metric">
+
+                    <span>LISTENERS</span>
+
+                    <strong id="listenersValue">
+                        0
+                    </strong>
+
+                    <small>
+                        Eventos activos
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="optimization">
+
+                <div>
+
+                    <h3>
+                        ⚙ Optimización activa
+                    </h3>
+
+                    <p id="optimizationText">
+                        requestAnimationFrame ejecutándose
+                        correctamente.
+                    </p>
+
+                </div>
+
+                <div class="status-dot"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             NEWSLETTER / VALIDACIÓN
+        ====================================================== -->
+
+        <section id="comunidad" class="newsletter">
+
+            <div>
+
+                <span class="badge">
+                    👾 COMUNIDAD
+                </span>
+
+                <h2>
+                    ÚNETE A LA
+                    <span>COMUNIDAD</span>
+                </h2>
+
+                <p>
+                    Recibe noticias, eventos y novedades
+                    de videojuegos.
+                </p>
+
+            </div>
+
+
+            <form id="newsletterForm">
+
+                <input
+                    id="emailInput"
+                    type="email"
+                    placeholder="Ingresa tu correo electrónico"
+                    autocomplete="email"
+                >
+
+                <button
+                    type="submit"
+                    class="btn btn-primary">
+                    Suscribirme
+                </button>
+
+                <p
+                    id="formMessage"
+                    class="form-message">
+                </p>
+
+            </form>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer>
+
+        <div class="logo">
+            <span>GAME</span><strong>ZONE</strong>
+        </div>
+
+        <p>
+            © 2026 GameZone · Experiencia interactiva
+        </p>
+
+        <span id="systemStatus">
+            ● Sistema activo
+        </span>
+
+    </footer>
+
+</body>
+</html>
