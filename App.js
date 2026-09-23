@@ -1,170 +1,116 @@
-/* =========================================================
-   GAMEZONE
-   JavaScript moderno - ES6+
-
-   La aplicación está encapsulada mediante una IIFE.
-   De esta manera evitamos contaminar el scope global.
-
-   Los estados de animación y experiencia se conservan
-   mediante closures.
-========================================================= */
-
 (() => {
+  "use strict";
 
-    "use strict";
+  const canvas = document.querySelector("#gameCanvas");
 
+  const ctx = canvas.getContext("2d");
 
-    /* =====================================================
-       SELECTORES DOM
-    ====================================================== */
+  const gamesContainer = document.querySelector("#gamesContainer");
 
-    const canvas =
-        document.querySelector("#gameCanvas");
+  const filters = document.querySelectorAll(".filter");
 
-    const ctx =
-        canvas.getContext("2d");
+  const arcadeBtn = document.querySelector("#arcadeBtn");
 
-    const gamesContainer =
-        document.querySelector("#gamesContainer");
+  const pauseCanvasBtn = document.querySelector("#pauseCanvasBtn");
 
-    const filters =
-        document.querySelectorAll(".filter");
+  const exploreBtn = document.querySelector("#exploreBtn");
 
-    const arcadeBtn =
-        document.querySelector("#arcadeBtn");
+  const xpBtn = document.querySelector("#xpBtn");
 
-    const pauseCanvasBtn =
-        document.querySelector("#pauseCanvasBtn");
+  const xpValue = document.querySelector("#xpValue");
 
-    const exploreBtn =
-        document.querySelector("#exploreBtn");
+  const xpProgress = document.querySelector("#xpProgress");
 
-    const xpBtn =
-        document.querySelector("#xpBtn");
+  const levelText = document.querySelector("#levelText");
 
-    const xpValue =
-        document.querySelector("#xpValue");
+  const emailInput = document.querySelector("#emailInput");
 
-    const xpProgress =
-        document.querySelector("#xpProgress");
+  const newsletterForm = document.querySelector("#newsletterForm");
 
-    const levelText =
-        document.querySelector("#levelText");
+  const formMessage = document.querySelector("#formMessage");
 
-    const emailInput =
-        document.querySelector("#emailInput");
+  const fpsValue = document.querySelector("#fpsValue");
 
-    const newsletterForm =
-        document.querySelector("#newsletterForm");
+  const particleValue = document.querySelector("#particleValue");
 
-    const formMessage =
-        document.querySelector("#formMessage");
+  const frameValue = document.querySelector("#frameValue");
 
-    const fpsValue =
-        document.querySelector("#fpsValue");
+  const listenersValue = document.querySelector("#listenersValue");
 
-    const particleValue =
-        document.querySelector("#particleValue");
+  const optimizationText = document.querySelector("#optimizationText");
 
-    const frameValue =
-        document.querySelector("#frameValue");
+  const games = [
+    {
+      title: "Cyber Strike",
+      category: "accion",
+      icon: "⚔️",
+      description: "Combate futurista y acción intensa.",
+    },
 
-    const listenersValue =
-        document.querySelector("#listenersValue");
+    {
+      title: "Lost Kingdom",
+      category: "aventura",
+      icon: "🏰",
+      description: "Explora mundos y descubre secretos.",
+    },
 
-    const optimizationText =
-        document.querySelector("#optimizationText");
+    {
+      title: "Nitro Racing",
+      category: "carreras",
+      icon: "🏎️",
+      description: "Velocidad extrema y competición.",
+    },
 
+    {
+      title: "Empire War",
+      category: "estrategia",
+      icon: "♟️",
+      description: "Construye tu imperio y conquista.",
+    },
 
-    /* =====================================================
-       DATOS DE LOS VIDEOJUEGOS
-    ====================================================== */
+    {
+      title: "Shadow Hunter",
+      category: "accion",
+      icon: "🥷",
+      description: "Combates rápidos en las sombras.",
+    },
 
-    const games = [
+    {
+      title: "Dragon Quest",
+      category: "aventura",
+      icon: "🐉",
+      description: "Una aventura llena de criaturas.",
+    },
 
-        {
-            title: "Cyber Strike",
-            category: "accion",
-            icon: "⚔️",
-            description: "Combate futurista y acción intensa."
-        },
+    {
+      title: "Turbo X",
+      category: "carreras",
+      icon: "🏁",
+      description: "Carreras urbanas a máxima velocidad.",
+    },
 
-        {
-            title: "Lost Kingdom",
-            category: "aventura",
-            icon: "🏰",
-            description: "Explora mundos y descubre secretos."
-        },
+    {
+      title: "Galaxy Commander",
+      category: "estrategia",
+      icon: "🚀",
+      description: "Controla una flota espacial.",
+    },
+  ];
 
-        {
-            title: "Nitro Racing",
-            category: "carreras",
-            icon: "🏎️",
-            description: "Velocidad extrema y competición."
-        },
+  const renderGames = (category = "todos") => {
+    gamesContainer.innerHTML = "";
 
-        {
-            title: "Empire War",
-            category: "estrategia",
-            icon: "♟️",
-            description: "Construye tu imperio y conquista."
-        },
+    const filteredGames =
+      category === "todos"
+        ? games
+        : games.filter((game) => game.category === category);
 
-        {
-            title: "Shadow Hunter",
-            category: "accion",
-            icon: "🥷",
-            description: "Combates rápidos en las sombras."
-        },
+    filteredGames.forEach((game) => {
+      const article = document.createElement("article");
 
-        {
-            title: "Dragon Quest",
-            category: "aventura",
-            icon: "🐉",
-            description: "Una aventura llena de criaturas."
-        },
+      article.classList.add("game-card");
 
-        {
-            title: "Turbo X",
-            category: "carreras",
-            icon: "🏁",
-            description: "Carreras urbanas a máxima velocidad."
-        },
-
-        {
-            title: "Galaxy Commander",
-            category: "estrategia",
-            icon: "🚀",
-            description: "Controla una flota espacial."
-        }
-
-    ];
-
-
-    /* =====================================================
-       MANIPULACIÓN DINÁMICA DEL DOM
-    ====================================================== */
-
-    const renderGames = (category = "todos") => {
-
-        gamesContainer.innerHTML = "";
-
-        const filteredGames =
-            category === "todos"
-                ? games
-                : games.filter(
-                    game => game.category === category
-                );
-
-
-        filteredGames.forEach(game => {
-
-            const article =
-                document.createElement("article");
-
-            article.classList.add("game-card");
-
-            article.innerHTML = `
+      article.innerHTML = `
 
                 <div class="game-image">
                     ${game.icon}
@@ -187,491 +133,225 @@
                 </div>
             `;
 
-            gamesContainer.appendChild(article);
-
-        });
-
-    };
-
-
-    /* =====================================================
-       EVENTOS DE FILTROS
-    ====================================================== */
-
-    filters.forEach(filter => {
-
-        filter.addEventListener("click", () => {
-
-            filters.forEach(item =>
-                item.classList.remove("active")
-            );
-
-            filter.classList.add("active");
-
-            renderGames(
-                filter.dataset.category
-            );
-
-        });
-
+      gamesContainer.appendChild(article);
     });
+  };
 
+  filters.forEach((filter) => {
+    filter.addEventListener("click", () => {
+      filters.forEach((item) => item.classList.remove("active"));
 
-    /* =====================================================
-       IIFE + CLOSURE PARA EXPERIENCIA
-    ====================================================== */
+      filter.classList.add("active");
 
-    const createExperienceSystem = (() => {
+      renderGames(filter.dataset.category);
+    });
+  });
 
-        let xp = 0;
+  const createExperienceSystem = (() => {
+    let xp = 0;
 
-        return () => {
+    return () => {
+      xp += 25;
 
-            xp += 25;
+      const level = Math.floor(xp / 100) + 1;
 
-            const level =
-                Math.floor(xp / 100) + 1;
+      const progress = xp % 100;
 
-            const progress =
-                xp % 100;
+      xpValue.textContent = `${xp} XP`;
 
-            xpValue.textContent =
-                `${xp} XP`;
+      xpProgress.style.width = `${progress}%`;
 
-            xpProgress.style.width =
-                `${progress}%`;
-
-            levelText.textContent =
-                `Nivel ${level} · ${
-                    level === 1
-                        ? "Novato"
-                        : "Jugador avanzado"
-                }`;
-
-        };
-
-    })();
-
-
-    /*
-       El closure anterior conserva la variable xp
-       entre las diferentes llamadas.
-
-       xp no es una variable global.
-       Su estado solamente puede modificarse mediante
-       la función retornada por el closure.
-    */
-
-    xpBtn.addEventListener(
-        "click",
-        () => createExperienceSystem()
-    );
-
-
-    /* =====================================================
-       TOGGLE DEL DOM
-    ====================================================== */
-
-    arcadeBtn.addEventListener(
-        "click",
-        () => {
-
-            document.body.classList.toggle(
-                "arcade"
-            );
-
-            const enabled =
-                document.body.classList.contains(
-                    "arcade"
-                );
-
-            arcadeBtn.textContent =
-                enabled
-                    ? "🎮 Arcade activado"
-                    : "🎮 Modo Arcade";
-
-        }
-    );
-
-
-    /* =====================================================
-       SCROLL
-    ====================================================== */
-
-    exploreBtn.addEventListener(
-        "click",
-        () => {
-
-            document
-                .querySelector("#juegos")
-                ?.scrollIntoView({
-                    behavior: "smooth"
-                });
-
-        }
-    );
-
-
-    /* =====================================================
-       CANVAS
-       requestAnimationFrame
-       delta time
-    ====================================================== */
-
-    let animationId = null;
-
-    let running = true;
-
-    let lastTime = 0;
-
-    let frames = 0;
-
-    let fps = 0;
-
-    let fpsTimer = 0;
-
-
-    /* =====================================================
-       AJUSTAR CANVAS
-    ====================================================== */
-
-    const resizeCanvas = () => {
-
-        const ratio =
-            window.devicePixelRatio || 1;
-
-        canvas.width =
-            canvas.clientWidth * ratio;
-
-        canvas.height =
-            canvas.clientHeight * ratio;
-
-        ctx.setTransform(
-            ratio,
-            0,
-            0,
-            ratio,
-            0,
-            0
-        );
-
+      levelText.textContent = `Nivel ${level} · ${
+        level === 1 ? "Novato" : "Jugador avanzado"
+      }`;
     };
+  })();
 
+  xpBtn.addEventListener("click", () => createExperienceSystem());
 
-    window.addEventListener(
-        "resize",
-        resizeCanvas
-    );
+  arcadeBtn.addEventListener("click", () => {
+    document.body.classList.toggle("arcade");
 
+    const enabled = document.body.classList.contains("arcade");
 
-    /* =====================================================
-       PARTÍCULAS
-    ====================================================== */
+    arcadeBtn.textContent = enabled ? "🎮 Arcade activado" : "🎮 Modo Arcade";
+  });
 
-    const particles = [];
+  exploreBtn.addEventListener("click", () => {
+    document.querySelector("#juegos")?.scrollIntoView({
+      behavior: "smooth",
+    });
+  });
 
+  let animationId = null;
 
-    const createParticle = () => {
+  let running = true;
 
-        particles.push({
+  let lastTime = 0;
 
-            x:
-                Math.random() *
-                canvas.clientWidth,
+  let frames = 0;
 
-            y:
-                Math.random() *
-                canvas.clientHeight,
+  let fps = 0;
 
-            radius:
-                Math.random() * 3 + 1,
+  let fpsTimer = 0;
 
-            speed:
-                Math.random() * 30 + 20,
+  const resizeCanvas = () => {
+    const ratio = window.devicePixelRatio || 1;
 
-            opacity:
-                Math.random() * .7 + .3
+    canvas.width = canvas.clientWidth * ratio;
 
-        });
+    canvas.height = canvas.clientHeight * ratio;
 
-    };
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  };
 
+  window.addEventListener("resize", resizeCanvas);
 
-    for (let i = 0; i < 70; i++) {
+  const particles = [];
 
-        createParticle();
+  const createParticle = () => {
+    particles.push({
+      x: Math.random() * canvas.clientWidth,
 
-    }
+      y: Math.random() * canvas.clientHeight,
 
+      radius: Math.random() * 3 + 1,
 
-    /* =====================================================
+      speed: Math.random() * 30 + 20,
+
+      opacity: Math.random() * 0.7 + 0.3,
+    });
+  };
+
+  for (let i = 0; i < 70; i++) {
+    createParticle();
+  }
+
+  /* =====================================================
        DIBUJAR PARTÍCULAS
     ====================================================== */
 
-    const drawParticles = () => {
+  const drawParticles = () => {
+    ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
 
-        ctx.clearRect(
-            0,
-            0,
-            canvas.clientWidth,
-            canvas.clientHeight
-        );
+    particles.forEach((particle) => {
+      ctx.beginPath();
 
+      ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
 
-        particles.forEach(particle => {
+      ctx.fillStyle = `rgba(124,58,237,${particle.opacity})`;
 
-            ctx.beginPath();
+      ctx.fill();
+    });
+  };
 
-            ctx.arc(
-                particle.x,
-                particle.y,
-                particle.radius,
-                0,
-                Math.PI * 2
-            );
+  const updateParticles = (dt) => {
+    particles.forEach((particle) => {
+      particle.y -= particle.speed * dt;
 
-            ctx.fillStyle =
-                `rgba(124,58,237,${particle.opacity})`;
+      if (particle.y < -10) {
+        particle.y = canvas.clientHeight + 10;
 
-            ctx.fill();
+        particle.x = Math.random() * canvas.clientWidth;
+      }
+    });
+  };
 
-        });
+  const animate = (timestamp) => {
+    if (!running) {
+      return;
+    }
 
-    };
+    if (!lastTime) {
+      lastTime = timestamp;
+    }
 
+    const dt = Math.min((timestamp - lastTime) / 1000, 0.05);
 
-    /* =====================================================
-       ACTUALIZAR PARTICULAS
-       delta time
-    ====================================================== */
+    lastTime = timestamp;
 
-    const updateParticles = dt => {
+    updateParticles(dt);
 
-        particles.forEach(particle => {
+    drawParticles();
 
-            particle.y -=
-                particle.speed * dt;
+    frames++;
 
+    fpsTimer += dt;
 
-            if (particle.y < -10) {
+    if (fpsTimer >= 1) {
+      fps = frames;
 
-                particle.y =
-                    canvas.clientHeight + 10;
+      frames = 0;
 
-                particle.x =
-                    Math.random() *
-                    canvas.clientWidth;
+      fpsTimer = 0;
 
-            }
+      fpsValue.textContent = fps;
+    }
 
-        });
+    frameValue.textContent = Number(frameValue.textContent) + 1;
 
-    };
+    particleValue.textContent = particles.length;
 
+    animationId = requestAnimationFrame(animate);
+  };
 
-    /* =====================================================
-       LOOP DE ANIMACIÓN
-    ====================================================== */
+  resizeCanvas();
 
-    const animate = timestamp => {
+  animationId = requestAnimationFrame(animate);
 
-        if (!running) {
+  pauseCanvasBtn.addEventListener("click", () => {
+    running = !running;
 
-            return;
+    if (!running) {
+      cancelAnimationFrame(animationId);
 
-        }
+      pauseCanvasBtn.textContent = "▶ Reanudar efectos";
 
+      optimizationText.textContent =
+        "Animación pausada mediante cancelAnimationFrame.";
+    } else {
+      lastTime = 0;
 
-        if (!lastTime) {
+      pauseCanvasBtn.textContent = "⏸ Pausar efectos";
 
-            lastTime = timestamp;
+      optimizationText.textContent =
+        "requestAnimationFrame ejecutándose correctamente.";
 
-        }
+      animationId = requestAnimationFrame(animate);
+    }
+  });
 
+  newsletterForm.addEventListener("submit", (event) => {
+    event.preventDefault();
 
-        /*
-           Delta time.
+    const email = emailInput.value.trim();
 
-           Convertimos milisegundos a segundos
-           para que el movimiento no dependa
-           directamente de la cantidad de FPS.
-        */
+    if (!email) {
+      formMessage.textContent = "⚠ Ingresa un correo electrónico.";
 
-        const dt =
-            Math.min(
-                (timestamp - lastTime) / 1000,
-                .05
-            );
+      formMessage.style.color = "#f87171";
 
-        lastTime = timestamp;
+      return;
+    }
 
+    if (!email.includes("@")) {
+      formMessage.textContent = "⚠ El correo no es válido.";
 
-        updateParticles(dt);
+      formMessage.style.color = "#f87171";
 
-        drawParticles();
+      return;
+    }
 
+    formMessage.textContent = "✓ Suscripción realizada correctamente.";
 
-        frames++;
+    formMessage.style.color = "#22c55e";
 
-        fpsTimer += dt;
+    emailInput.value = "";
+  });
 
+  const totalListeners = document.querySelectorAll("button, input, a").length;
 
-        if (fpsTimer >= 1) {
+  listenersValue.textContent = totalListeners;
 
-            fps = frames;
-
-            frames = 0;
-
-            fpsTimer = 0;
-
-            fpsValue.textContent =
-                fps;
-
-        }
-
-
-        frameValue.textContent =
-            Number(frameValue.textContent) + 1;
-
-        particleValue.textContent =
-            particles.length;
-
-
-        animationId =
-            requestAnimationFrame(
-                animate
-            );
-
-    };
-
-
-    /* =====================================================
-       INICIAR CANVAS
-    ====================================================== */
-
-    resizeCanvas();
-
-    animationId =
-        requestAnimationFrame(
-            animate
-        );
-
-
-    /* =====================================================
-       PAUSAR / REANUDAR
-       cancelAnimationFrame
-    ====================================================== */
-
-    pauseCanvasBtn.addEventListener(
-        "click",
-        () => {
-
-            running = !running;
-
-
-            if (!running) {
-
-                cancelAnimationFrame(
-                    animationId
-                );
-
-                pauseCanvasBtn.textContent =
-                    "▶ Reanudar efectos";
-
-                optimizationText.textContent =
-                    "Animación pausada mediante cancelAnimationFrame.";
-
-            } else {
-
-                lastTime = 0;
-
-                pauseCanvasBtn.textContent =
-                    "⏸ Pausar efectos";
-
-                optimizationText.textContent =
-                    "requestAnimationFrame ejecutándose correctamente.";
-
-                animationId =
-                    requestAnimationFrame(
-                        animate
-                    );
-
-            }
-
-        }
-    );
-
-
-    /* =====================================================
-       VALIDACIÓN DE FORMULARIO
-    ====================================================== */
-
-    newsletterForm.addEventListener(
-        "submit",
-        event => {
-
-            event.preventDefault();
-
-            const email =
-                emailInput.value.trim();
-
-
-            if (!email) {
-
-                formMessage.textContent =
-                    "⚠ Ingresa un correo electrónico.";
-
-                formMessage.style.color =
-                    "#f87171";
-
-                return;
-
-            }
-
-
-            if (!email.includes("@")) {
-
-                formMessage.textContent =
-                    "⚠ El correo no es válido.";
-
-                formMessage.style.color =
-                    "#f87171";
-
-                return;
-
-            }
-
-
-            formMessage.textContent =
-                "✓ Suscripción realizada correctamente.";
-
-            formMessage.style.color =
-                "#22c55e";
-
-            emailInput.value = "";
-
-        }
-    );
-
-
-    /* =====================================================
-       CONTADOR DE LISTENERS
-    ====================================================== */
-
-    const totalListeners =
-        document.querySelectorAll(
-            "button, input, a"
-        ).length;
-
-    listenersValue.textContent =
-        totalListeners;
-
-
-    /* =====================================================
-       RENDER INICIAL
-    ====================================================== */
-
-    renderGames();
-
-
+  renderGames();
 })();
